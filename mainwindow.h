@@ -21,6 +21,14 @@ private slots:
 
     void on_loginButton_clicked();
 
+    void exitFunction();
+
+    void registerAccount();
+
+    void insertUser(std::string, std::string);
+
+    bool createConnection();
+
 private:
     Ui::MainWindow *ui;
     Login *log;
