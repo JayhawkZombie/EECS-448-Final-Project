@@ -13,6 +13,7 @@
 #include <QSqlQuery>
 
 //#include "C:\\SystemProgramming\\Qt-5.3\\sql\\connection.h"
+std::string username = "";
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,38 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 //
-//create simple dialog that displays a button and has an ok button
-//
-//    QDialog dialog(this);
-//    QFormLayout form(&dialog);
-//    QLabel *message = new QLabel("Please select the Login button");
-//    form.addWidget(message);
-//    QDialogButtonBox buttonBox(QDialogButtonBox::Ok, &dialog);
-//    form.addRow(&buttonBox);
-//    QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-//    dialog.exec();
-
-//
-//run database generation code
-//
-//    if (!createConnection())
-//            exit(1);
-
-//
 //runs loginBuuton call which opens the login dialog
 //
     on_loginButton_clicked();
-
-//
-//simple database example
-//
-//    this->hide();
-//    QSqlDatabase db;
-//    db = QSqlDatabase::addDatabase("QSQLITE");
-//    db.setDatabaseName("users.db3");
-//    db.open();
-//    db.
-//    this->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +42,7 @@ void MainWindow::on_logoutButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_loginButton_clicked()
 {
+    this->hide();
     QDialog dialog(this);
     // Use a layout allowing to have a label next to each field
     QFormLayout form(&dialog);
@@ -107,13 +80,72 @@ void MainWindow::on_loginButton_clicked()
     QObject::connect(okButton, SIGNAL(clicked()), &dialog, SLOT(accept()));
     QObject::connect(cancelButton, SIGNAL(clicked()), this, SLOT(exitFunction()));
 
+    dialog.setWindowFlags( ( (dialog.windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint) );
+
     // ok button pressed enters the if statement
     // cancel button closes application
     // register button opens register dialog
     if (dialog.exec() == QDialog::Accepted) {
         // If the user didn't dismiss the dialog, do something with the fields
-        ui->nameLabel->setText(userEdit->text());
+        std::string user = userEdit->text().toStdString();
+        std::string pss = passEdit->text().toStdString();
+
+        authenticate(user, pss);
+        this->show();
     }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  Authenticate user on login
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::authenticate(std::string user, std::string pss)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("users.db3");
+    if (!db.open()) {
+        QMessageBox::critical(0, qApp->tr("Cannot open database"),
+            qApp->tr("Unable to establish a database connection.\n"
+                     "This example needs SQLite support. Please read "
+                     "the Qt SQL driver documentation for information how "
+                     "to build it.\n\n"
+                     "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+    QString queryString = "SELECT * FROM users WHERE username='" + QString::fromStdString(user) + "'";
+    QSqlQuery query(db);
+    query.prepare(queryString);
+
+    if( !query.exec() )
+      qDebug() << query.lastError();
+    else
+    {
+        qDebug( "Selected!" );
+        query.first();
+        QSqlRecord rec = query.record();
+        qDebug() << rec.value(0).toString();
+
+        if (rec.value(0).toString() == "")
+        {
+            invalidDialog("Username not found");
+            on_loginButton_clicked();
+        }//not in database
+        else if(rec.value(1).toString() != QString::fromStdString(pss))
+        {
+            invalidDialog("Password doesn't match any on record");
+            on_loginButton_clicked();
+        }
+        else
+        {
+            username = user;
+            ui->nameLabel->setText(QString::fromStdString(user));
+        }
+//      int cols = rec.count();
+
+//      for( int r=0; query.next(); r++ )
+//        for( int c=0; c<cols; c++ )
+//          qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
+    }
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,10 +203,6 @@ void MainWindow::registerAccount()
             std::string pss = passEdit->text().toStdString();
             insertUser(usr, pss);
         }
-        else
-        {
-
-        }//incorrect entry of passwords
     }
 }
 
@@ -194,40 +222,73 @@ void MainWindow::insertUser(std::string usr, std::string pss)
                      "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-//    QSqlQuery query;
-//    query.exec("create table users (id int primary key, "
-//               "username varchar(20), password varchar(20))");
-//    query.exec("select * from users");
-//    query.last();
-//    std::string size = std::to_string(query.at() + 2);
-//    std::string temp = "insert into users values(" + size + ", '" + usr + "', '" + pss + "')";
-//    QString qtemp = QString::fromStdString(temp);
-//    qDebug(temp.c_str());
-//    query.exec(qtemp);
+    QString queryString = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + QString::fromStdString(usr) + "'";
+    QSqlQuery query(db);
+    query.prepare(queryString);
 
-
-    QSqlQuery query1;
-    QString queryString = "SELECT username FROM users WHERE username='" + QString::fromStdString(usr) + "'";
-    query1.exec(queryString);
-
-    QSqlRecord record = query1.record();
-    qDebug() << record.value(0).toString();
-
-    if (query1.record().value(0).toString() == "")
-    {
-        qDebug() << "Exists";
-    }
+    if( !query.exec() )
+      qDebug() << query.lastError();
     else
     {
-        qDebug() << "new entry";
+      qDebug( "Selected!" );
+
+      QSqlRecord rec = query.record();
+
+      int cols = rec.count();
+
+      for( int r=0; query.next(); r++ )
+        for( int c=0; c<cols; c++ )
+          qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
     }
 
-//    while (query1.next()) {
-//        QSqlRecord record = query1.record();
-//        qDebug() << "Username : " << record.value(0).toString();
-//    }
 
-    db.close();
+    query.first();
+    if (query.value(0).toString() == "0" && usr != "users")
+    {
+        QSqlQuery query1(db);
+        queryString = "create table " + QString::fromStdString(usr) + "(username varchar(20), password varchar(20))";
+        qDebug() << queryString;
+        query1.prepare(queryString);
+        query1.exec();
+        //insert into users(username, password) values('amy', '1234')
+        queryString = "insert into users(username, password) values('" + QString::fromStdString(usr) + "', '" + QString::fromStdString(pss) + "')";
+        qDebug() << queryString;
+        query1.prepare(queryString);
+        query1.exec();
+
+    }
+    else if (query.value(0).toString() == "1")
+    {
+        qDebug() << "Table exists";
+        invalidDialog("Invalid Username please select another");
+        registerAccount();
+        db.close();
+    }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  inform user that the username has already been taken
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::invalidDialog(std::string str)
+{
+    QDialog dialog(this);
+    // Use a layout allowing to have a label next to each field
+    QFormLayout form(&dialog);
+
+    // Add some text above the fields
+    form.addRow(new QLabel(QString::fromStdString(str)));
+
+    //Add buttons to the register dialog
+    QPushButton *okButton = new QPushButton();
+    okButton->setText("Ok");
+
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget(okButton);
+
+    form.addRow(layout);
+    QObject::connect(okButton, SIGNAL(clicked()), &dialog, SLOT(accept()));
+
+    dialog.exec();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

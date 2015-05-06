@@ -29,6 +29,10 @@ private slots:
 
     bool createConnection();
 
+    void invalidDialog(std::string);
+
+    void authenticate(std::string, std::string);
+
 private:
     Ui::MainWindow *ui;
     Login *log;
