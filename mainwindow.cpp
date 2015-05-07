@@ -78,9 +78,9 @@ void MainWindow::on_loginButton_clicked()
     cancelButton->setText("Cancel");
 
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(regButton);
     layout->addWidget(okButton);
     layout->addWidget(cancelButton);
+    layout->addWidget(regButton);
 
     //QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
     form.addRow(layout);
@@ -128,6 +128,8 @@ void MainWindow::updateAccountList()
 {
     qDebug() << "Entering updateAccountList";
     ui->accountList->clear();
+    ui->accountEdit->clear();
+    ui->passEdit->clear();
     QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
     db.setDatabaseName( "users.db3" );
     if( !db.open() )
@@ -161,6 +163,16 @@ void MainWindow::updateAccountList()
                 qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( qry.value(c).toString() );
             }//for
         }//for
+    }
+
+    if (ui->accountList->count() == 0)
+    {
+        std::string message = "It seems you don't have any entries associated with your account\n"
+                                "Please enter a new username/password combo in the lineEdit boxes in the bottom right\n"
+                                "You can then select \"Add\" or \"Save\" to add the combo to your account\n\n"
+                                "Once you have a couple entries you can select said entries from the listWidget on the middle left\n"
+                                "Clicking on entries will populate the lineEdits and you may edit thier information";
+        invalidDialog(message);
     }
     db.close();
 }
@@ -481,30 +493,37 @@ void MainWindow::addAccount()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::deleteAccount()
 {
-    QString itemString = ui->accountList->currentItem()->text();
-
-    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
-    db.setDatabaseName( "users.db3" );
-    if( !db.open() )
+    if (ui->accountList->currentRow() != -1)
     {
-      qDebug() << db.lastError();
-      qFatal( "Failed to connect." );
+        QString itemString = ui->accountList->currentItem()->text();
+
+        QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+        db.setDatabaseName( "users.db3" );
+        if( !db.open() )
+        {
+          qDebug() << db.lastError();
+          qFatal( "Failed to connect." );
+        }
+
+        QSqlQuery qry;
+
+        QString queryString = "DELETE FROM " + QString::fromStdString(username) + " WHERE username='" + itemString + "'";
+        qDebug() << queryString;
+        qry.prepare(queryString);
+        if( !qry.exec() )
+          qDebug() << qry.lastError();
+        else
+        {
+            db.close();
+            qDebug() << "Leaving deleteAccount";
+            updateAccountList();
+        }
+        db.close();
     }
-
-    QSqlQuery qry;
-
-    QString queryString = "DELETE FROM " + QString::fromStdString(username) + " WHERE username='" + itemString + "'";
-    qDebug() << queryString;
-    qry.prepare(queryString);
-    if( !qry.exec() )
-      qDebug() << qry.lastError();
     else
     {
-        db.close();
-        qDebug() << "Leaving deleteAccount";
-        updateAccountList();
+        invalidDialog("Please select an entry to delete");
     }
-    db.close();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -520,42 +539,49 @@ void MainWindow::on_deleteButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_saveButton_clicked()
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
-    db.setDatabaseName( "users.db3" );
-    if( !db.open() )
+    if (ui->accountEdit->text() == "" || ui->passEdit->text() == "")
     {
-      qDebug() << db.lastError();
-      qFatal( "Failed to connect." );
+        invalidDialog("Please enter a valid username/password");
     }
-
-    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + ui->accountEdit->text() + "'";
-    QSqlQuery query(db);
-    query.prepare(queryString);
-
-    if( !query.exec() )
-      qDebug() << query.lastError();
     else
     {
-        qDebug( "Selected!" );
-        query.first();
-        QSqlRecord rec = query.record();
-        qDebug() << rec.value(0).toString();
-
-        if (rec.value(0).toString() == "")
+        QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+        db.setDatabaseName( "users.db3" );
+        if( !db.open() )
         {
-            db.close();
-            addAccount();
-        }//not in database
+          qDebug() << db.lastError();
+          qFatal( "Failed to connect." );
+        }
+
+        QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + ui->accountEdit->text() + "'";
+        QSqlQuery query(db);
+        query.prepare(queryString);
+
+        if( !query.exec() )
+          qDebug() << query.lastError();
         else
         {
-            QString queryString = "UPDATE " + QString::fromStdString(username) + " SET password='" + ui->passEdit->text() + "' " + "WHERE username='" + ui->accountEdit->text() + "'";
-            qDebug() << queryString;
-            query.prepare(queryString);
-            query.exec();
-            db.close();
+            qDebug( "Selected!" );
+            query.first();
+            QSqlRecord rec = query.record();
+            qDebug() << rec.value(0).toString();
+
+            if (rec.value(0).toString() == "")
+            {
+                db.close();
+                addAccount();
+            }//not in database
+            else
+            {
+                QString queryString = "UPDATE " + QString::fromStdString(username) + " SET password='" + ui->passEdit->text() + "' " + "WHERE username='" + ui->accountEdit->text() + "'";
+                qDebug() << queryString;
+                query.prepare(queryString);
+                query.exec();
+                db.close();
+            }
         }
+        updateAccountList();
     }
-    updateAccountList();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
