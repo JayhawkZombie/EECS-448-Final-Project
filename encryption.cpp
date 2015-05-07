@@ -7,6 +7,8 @@
 
 int mod(int, int, int);
 
+//ADDED COMMENT
+
 std::string encryption::encrypt(std::string toEncrypt, int p, int q)
 {
 	int n = p * q;
