@@ -7,6 +7,7 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 
+#include <QListWidgetItem>
 #include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -21,6 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    std::string message = "This program is a simple solution to password management\n"
+                          "As a user you will be able to enter username and password combo's that will be encrypted in storage for security\n\n"
+                            "You'll be prompted to login to the program on startup\n"
+                            "You can register a new account and return to the login screen by selecting the \"Register\" button\n\n"
+                            "Once you enter the application you'll be able to add new account/password combos";
+    invalidDialog(message);
+
 //
 //runs loginBuuton call which opens the login dialog
 //
@@ -34,7 +42,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_logoutButton_clicked()
 {
-    exit(0);
+    on_loginButton_clicked();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,7 +100,69 @@ void MainWindow::on_loginButton_clicked()
 
         authenticate(user, pss);
         this->show();
+        enableStatus(true);
     }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  enable all of the items in the mainwindow and populate accountList
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::enableStatus(bool stat)
+{
+    ui->logoutButton->setEnabled(stat);
+    ui->accountList->setEnabled(stat);
+    ui->staticInfoLabel->setEnabled(stat);
+    ui->addButton->setEnabled(stat);
+    ui->deleteButton->setEnabled(stat);
+
+    updateAccountList();
+    ui->accountEdit->setEnabled(stat);
+    ui->passEdit->setEnabled(stat);
+    ui->saveButton->setEnabled(stat);
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  update account list
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::updateAccountList()
+{
+    qDebug() << "Entering updateAccountList";
+    ui->accountList->clear();
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    db.setDatabaseName( "users.db3" );
+    if( !db.open() )
+    {
+      qDebug() << db.lastError();
+      qFatal( "Failed to connect." );
+    }
+
+    QSqlQuery qry;
+    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " ORDER BY username";\
+    qDebug() << queryString;
+    qry.prepare(queryString);
+    if( !qry.exec() )
+      qDebug() << qry.lastError();
+    else
+    {
+        qDebug( "entries Selected!" );
+
+        QSqlRecord rec = qry.record();
+
+        int cols = rec.count();
+
+        for( int c=0; c<cols; c++ )
+            qDebug() << QString( "Column %1: %2" ).arg( c ).arg( rec.fieldName(c) );
+
+        for( int r=0; qry.next(); r++ )
+        {
+            ui->accountList->addItem(qry.value(0).toString());
+            for( int c=0; c<cols; c++ )
+            {
+                qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( qry.value(c).toString() );
+            }//for
+        }//for
+    }
+    db.close();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -127,11 +197,13 @@ void MainWindow::authenticate(std::string user, std::string pss)
         if (rec.value(0).toString() == "")
         {
             invalidDialog("Username not found");
+            db.close();
             on_loginButton_clicked();
         }//not in database
         else if(rec.value(1).toString() != QString::fromStdString(pss))
         {
             invalidDialog("Password doesn't match any on record");
+            db.close();
             on_loginButton_clicked();
         }
         else
@@ -145,7 +217,7 @@ void MainWindow::authenticate(std::string user, std::string pss)
 //        for( int c=0; c<cols; c++ )
 //          qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
     }
-
+    db.close();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,6 +336,7 @@ void MainWindow::insertUser(std::string usr, std::string pss)
         registerAccount();
         db.close();
     }
+    db.close();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -276,7 +349,9 @@ void MainWindow::invalidDialog(std::string str)
     QFormLayout form(&dialog);
 
     // Add some text above the fields
-    form.addRow(new QLabel(QString::fromStdString(str)));
+    QLabel *label = new QLabel(QString::fromStdString(str));
+    label->setAlignment(Qt::AlignCenter);
+    form.addRow(label);
 
     //Add buttons to the register dialog
     QPushButton *okButton = new QPushButton();
@@ -352,4 +427,177 @@ bool MainWindow::createConnection()
 //    query.exec("insert into images values(3, 'images/qt-project.png')");
     db.close();
     return true;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  add account object to a users database
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::on_addButton_clicked()
+{
+    if (ui->accountEdit->text() == "" || ui->passEdit->text() == "")
+    {
+        invalidDialog("Please enter an appropriate username or password in the account info fields");
+    }
+    else if (ui->accountEdit->text() == "Selected Account Name" || ui->passEdit->text() == "Selected Account Password")
+    {
+        invalidDialog("Please clear account info' fields");
+    }
+    else
+    {
+        addAccount();
+    }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  add account object to a users database table
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::addAccount()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    db.setDatabaseName( "users.db3" );
+    if( !db.open() )
+    {
+      qDebug() << db.lastError();
+      qFatal( "Failed to connect." );
+    }
+
+    QSqlQuery qry;
+
+    QString queryString = "INSERT INTO " + QString::fromStdString(username) + "(username, password) VALUES ('" + ui->accountEdit->text() + "', '" + ui->passEdit->text() + "')";
+    qDebug() << queryString;
+    qry.prepare(queryString);
+    if( !qry.exec() )
+      qDebug() << qry.lastError();
+    else
+    {
+        db.close();
+        updateAccountList();
+    }
+    db.close();
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  delete account object to a users database table
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::deleteAccount()
+{
+    QString itemString = ui->accountList->currentItem()->text();
+
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    db.setDatabaseName( "users.db3" );
+    if( !db.open() )
+    {
+      qDebug() << db.lastError();
+      qFatal( "Failed to connect." );
+    }
+
+    QSqlQuery qry;
+
+    QString queryString = "DELETE FROM " + QString::fromStdString(username) + " WHERE username='" + itemString + "'";
+    qDebug() << queryString;
+    qry.prepare(queryString);
+    if( !qry.exec() )
+      qDebug() << qry.lastError();
+    else
+    {
+        db.close();
+        qDebug() << "Leaving deleteAccount";
+        updateAccountList();
+    }
+    db.close();
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  delete entries from a users account
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::on_deleteButton_clicked()
+{
+    deleteAccount();
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  save edited account information to database
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::on_saveButton_clicked()
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    db.setDatabaseName( "users.db3" );
+    if( !db.open() )
+    {
+      qDebug() << db.lastError();
+      qFatal( "Failed to connect." );
+    }
+
+    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + ui->accountEdit->text() + "'";
+    QSqlQuery query(db);
+    query.prepare(queryString);
+
+    if( !query.exec() )
+      qDebug() << query.lastError();
+    else
+    {
+        qDebug( "Selected!" );
+        query.first();
+        QSqlRecord rec = query.record();
+        qDebug() << rec.value(0).toString();
+
+        if (rec.value(0).toString() == "")
+        {
+            db.close();
+            addAccount();
+        }//not in database
+        else
+        {
+            QString queryString = "UPDATE " + QString::fromStdString(username) + " SET password='" + ui->passEdit->text() + "' " + "WHERE username='" + ui->accountEdit->text() + "'";
+            qDebug() << queryString;
+            query.prepare(queryString);
+            query.exec();
+            db.close();
+        }
+    }
+    updateAccountList();
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  update account infor line edits when currentItem changes
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void MainWindow::on_accountList_itemClicked(QListWidgetItem *item)
+{
+    ui->accountEdit->setText(item->text());
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    db.setDatabaseName( "users.db3" );
+    if( !db.open() )
+    {
+      qDebug() << db.lastError();
+      qFatal( "Failed to connect." );
+    }
+
+    QSqlQuery qry;
+
+    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + item->text() + "'";\
+    qDebug() << queryString;
+    qry.prepare(queryString);
+    if( !qry.exec() )
+      qDebug() << qry.lastError();
+    else
+    {
+        qDebug( "entry Selected!" );
+
+        QSqlRecord rec = qry.record();
+
+        int cols = rec.count();
+
+        for( int c=0; c<cols; c++ )
+            qDebug() << QString( "Column %1: %2" ).arg( c ).arg( rec.fieldName(c) );
+
+        for( int r=0; qry.next(); r++ )
+        {
+            ui->passEdit->setText(qry.value(1).toString());
+            for( int c=0; c<cols; c++ )
+            {
+                qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( qry.value(c).toString() );
+            }//for
+        }//for
+    }
+    db.close();
 }

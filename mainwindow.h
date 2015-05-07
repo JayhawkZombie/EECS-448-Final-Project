@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "login.h"
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -33,9 +33,24 @@ private slots:
 
     void authenticate(std::string, std::string);
 
+    void enableStatus(bool);
+
+    void on_addButton_clicked();
+
+    void updateAccountList();
+
+    void addAccount();
+
+    void deleteAccount();
+
+    void on_deleteButton_clicked();
+
+    void on_saveButton_clicked();
+
+    void on_accountList_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
-    Login *log;
 };
 
 #endif // MAINWINDOW_H
