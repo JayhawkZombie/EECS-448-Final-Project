@@ -13,6 +13,8 @@
 #include <QSqlError>
 #include <QSqlQuery>
 
+//comments doh
+
 //#include "C:\\SystemProgramming\\Qt-5.3\\sql\\connection.h"
 std::string username = "";
 
