@@ -14,6 +14,9 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -38,7 +41,10 @@ public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_4;
     QVBoxLayout *verticalLayout_3;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label_3;
     QLabel *nameLabel;
+    QFrame *line;
     QFormLayout *formLayout;
     QVBoxLayout *verticalLayout_2;
     QListWidget *accountList;
@@ -49,6 +55,9 @@ public:
     QPushButton *logoutButton;
     QSpacerItem *verticalSpacer;
     QLabel *staticInfoLabel;
+    QGridLayout *gridLayout;
+    QLabel *label_2;
+    QLabel *label;
     QLineEdit *accountEdit;
     QLineEdit *passEdit;
     QPushButton *saveButton;
@@ -62,7 +71,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setEnabled(true);
-        MainWindow->resize(638, 392);
+        MainWindow->resize(540, 404);
         actionLogout = new QAction(MainWindow);
         actionLogout->setObjectName(QStringLiteral("actionLogout"));
         actionExit = new QAction(MainWindow);
@@ -77,11 +86,31 @@ public:
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(-1, 10, -1, -1);
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        horizontalLayout->addWidget(label_3);
+
         nameLabel = new QLabel(centralWidget);
         nameLabel->setObjectName(QStringLiteral("nameLabel"));
-        nameLabel->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        nameLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        verticalLayout_3->addWidget(nameLabel);
+        horizontalLayout->addWidget(nameLabel);
+
+
+        verticalLayout_3->addLayout(horizontalLayout);
+
+        line = new QFrame(centralWidget);
+        line->setObjectName(QStringLiteral("line"));
+        line->setFrameShadow(QFrame::Plain);
+        line->setLineWidth(5);
+        line->setFrameShape(QFrame::HLine);
+
+        verticalLayout_3->addWidget(line);
 
         formLayout = new QFormLayout();
         formLayout->setSpacing(6);
@@ -139,17 +168,34 @@ public:
 
         verticalLayout->addWidget(staticInfoLabel);
 
+        gridLayout = new QGridLayout();
+        gridLayout->setSpacing(6);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, -1, -1, -1);
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        gridLayout->addWidget(label_2, 2, 0, 1, 1);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+
+        gridLayout->addWidget(label, 1, 0, 1, 1);
+
         accountEdit = new QLineEdit(centralWidget);
         accountEdit->setObjectName(QStringLiteral("accountEdit"));
         accountEdit->setEnabled(false);
 
-        verticalLayout->addWidget(accountEdit);
+        gridLayout->addWidget(accountEdit, 1, 1, 1, 1);
 
         passEdit = new QLineEdit(centralWidget);
         passEdit->setObjectName(QStringLiteral("passEdit"));
         passEdit->setEnabled(false);
 
-        verticalLayout->addWidget(passEdit);
+        gridLayout->addWidget(passEdit, 2, 1, 1, 1);
+
+
+        verticalLayout->addLayout(gridLayout);
 
         saveButton = new QPushButton(centralWidget);
         saveButton->setObjectName(QStringLiteral("saveButton"));
@@ -169,7 +215,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 638, 21));
+        menuBar->setGeometry(QRect(0, 0, 540, 21));
         menuMenu = new QMenu(menuBar);
         menuMenu->setObjectName(QStringLiteral("menuMenu"));
         MainWindow->setMenuBar(menuBar);
@@ -196,12 +242,15 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Password Manager - Gehrig, Kurt, Philip", 0));
         actionLogout->setText(QApplication::translate("MainWindow", "Logout", 0));
         actionExit->setText(QApplication::translate("MainWindow", "Exit", 0));
-        nameLabel->setText(QApplication::translate("MainWindow", "UserName", 0));
+        label_3->setText(QApplication::translate("MainWindow", "Logged in as:", 0));
+        nameLabel->setText(QString());
         addButton->setText(QApplication::translate("MainWindow", "Add Account to Database", 0));
         deleteButton->setText(QApplication::translate("MainWindow", "Delete Account from Database", 0));
         loginButton->setText(QApplication::translate("MainWindow", "Login", 0));
         logoutButton->setText(QApplication::translate("MainWindow", "Logout", 0));
         staticInfoLabel->setText(QApplication::translate("MainWindow", "Edit Account Information:", 0));
+        label_2->setText(QApplication::translate("MainWindow", "Password:", 0));
+        label->setText(QApplication::translate("MainWindow", "Username:", 0));
         accountEdit->setText(QString());
         passEdit->setText(QString());
         saveButton->setText(QApplication::translate("MainWindow", "(Save) Update Account Information", 0));
