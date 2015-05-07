@@ -247,9 +247,24 @@ release\moc_mainwindow.cpp: C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWi
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtouchdevice.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qicon.h \
-		login.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialog \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QListWidgetItem \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistwidget.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qframe.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyleoption.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qvalidator.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qregularexpression.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyle.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
 		mainwindow.h
 	C:\SystemProgramming\Qt\5.4\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/SystemProgramming/Qt/5.4/msvc2013_64/mkspecs/win32-msvc2013 -IC:/Users/a388p434/Dropbox/Gehrig/Programming/Qt/Passwords -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include/QtWidgets -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include/QtGui -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include/QtANGLE -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include/QtSql -IC:/SystemProgramming/Qt/5.4/msvc2013_64/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
 
@@ -379,6 +394,24 @@ release\main.obj: main.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtouchdevice.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qicon.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QListWidgetItem \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistwidget.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qframe.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyleoption.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qvalidator.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qregularexpression.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyle.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
 		login.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialog \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
@@ -496,10 +529,28 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtouchdevice.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qicon.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QListWidgetItem \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistwidget.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemview.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qframe.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyleoption.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qvalidator.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qregularexpression.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractslider.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyle.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
+		ui_mainwindow.h \
 		login.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialog \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
-		ui_mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QtSql \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QtSqlDepends \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\QtCore \
@@ -535,10 +586,8 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qtemporarydir.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\QScopedPointer \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qtemporaryfile.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractitemmodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractproxymodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qidentityproxymodel.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qitemselectionmodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qsortfilterproxymodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qstringlistmodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qjsonarray.h \
@@ -603,7 +652,6 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qlinkedlist.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qmessageauthenticationcode.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qqueue.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qregularexpression.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qscopedvaluerollback.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qstack.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qtextboundaryfinder.h \
@@ -624,19 +672,6 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qsqlquerymodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qsqlrelationaldelegate.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qitemdelegate.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemdelegate.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyleoption.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractspinbox.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qvalidator.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qslider.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractslider.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyle.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qframe.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlistview.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractitemview.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractscrollarea.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qcombobox.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qsqlrelationaltablemodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qsqltablemodel.h \
