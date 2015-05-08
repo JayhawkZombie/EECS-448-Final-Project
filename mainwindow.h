@@ -27,8 +27,6 @@ private slots:
 
     void insertUser(std::string, std::string);
 
-    bool createConnection();
-
     void invalidDialog(std::string);
 
     void authenticate(std::string, std::string);

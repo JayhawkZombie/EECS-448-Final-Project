@@ -228,11 +228,6 @@ void MainWindow::authenticate(std::string user, std::string pss)
             username = user;
             ui->nameLabel->setText(QString::fromStdString(user));
         }
-//      int cols = rec.count();
-
-//      for( int r=0; query.next(); r++ )
-//        for( int c=0; c<cols; c++ )
-//          qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
     }
     db.close();
 }
@@ -385,85 +380,11 @@ void MainWindow::invalidDialog(std::string str)
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//  connect to database initially - mainly referrence code
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bool MainWindow::createConnection()
-{
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("users.db3");
-    if (!db.open()) {
-        QMessageBox::critical(0, qApp->tr("Cannot open database"),
-            qApp->tr("Unable to establish a database connection.\n"
-                     "This example needs SQLite support. Please read "
-                     "the Qt SQL driver documentation for information how "
-                     "to build it.\n\n"
-                     "Click Cancel to exit."), QMessageBox::Cancel);
-        return false;
-    }
-
-    QSqlQuery query;
-    query.exec("create table users (id int primary key, "
-               "username varchar(20), password varchar(20))");
-    query.exec("insert into users values(1, 'Danny', '1234')");
-    query.exec("insert into users values(2, 'Christine', '1234')");
-    query.exec("insert into users values(3, 'Lars', '1234')");
-    query.exec("insert into users values(4, 'Roberto', '1234')");
-    query.exec("insert into users values(5, 'Maria', '1234')");
-
-    query.exec("drop table items");
-//    query.exec("create table items (id int primary key,"
-//                                             "imagefile int,"
-//                                             "itemtype varchar(20),"
-//                                             "description varchar(100))");
-//    query.exec("insert into items "
-//               "values(0, 0, 'Qt',"
-//               "'Qt is a full development framework with tools designed to "
-//               "streamline the creation of stunning applications and  "
-//               "amazing user interfaces for desktop, embedded and mobile "
-//               "platforms.')");
-//    query.exec("insert into items "
-//               "values(1, 1, 'Qt Quick',"
-//               "'Qt Quick is a collection of techniques designed to help "
-//               "developers create intuitive, modern-looking, and fluid "
-//               "user interfaces using a CSS & JavaScript like language.')");
-//    query.exec("insert into items "
-//               "values(2, 2, 'Qt Creator',"
-//               "'Qt Creator is a powerful cross-platform integrated "
-//               "development environment (IDE), including UI design tools "
-//               "and on-device debugging.')");
-//    query.exec("insert into items "
-//               "values(3, 3, 'Qt Project',"
-//               "'The Qt Project governs the open source development of Qt, "
-//               "allowing anyone wanting to contribute to join the effort "
-//               "through a meritocratic structure of approvers and "
-//               "maintainers.')");
-
-//    query.exec("create table images (itemid int, file varchar(20))");
-//    query.exec("insert into images values(0, 'images/qt-logo.png')");
-//    query.exec("insert into images values(1, 'images/qt-quick.png')");
-//    query.exec("insert into images values(2, 'images/qt-creator.png')");
-//    query.exec("insert into images values(3, 'images/qt-project.png')");
-    db.close();
-    return true;
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //  add account object to a users database
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_addButton_clicked()
 {
-    if (ui->accountEdit->text() == "" || ui->passEdit->text() == "")
-    {
-        invalidDialog("Please enter an appropriate username or password in the account info fields");
-    }
-    else if (ui->accountEdit->text() == "Selected Account Name" || ui->passEdit->text() == "Selected Account Password")
-    {
-        invalidDialog("Please clear account info' fields");
-    }
-    else
-    {
-        addAccount();
-    }
+    on_saveButton_clicked();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

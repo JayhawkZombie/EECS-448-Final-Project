@@ -15,7 +15,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    model.cpp \
     encryption.cpp
 
 HEADERS  += mainwindow.h \
