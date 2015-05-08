@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "login.h"
 #include <stdio.h>
 #include <QtSql/QtSql>
 #include <QDebug>
@@ -14,11 +13,6 @@
 #include <QSqlQuery>
 #include "encryption.h"
 
-//comments doh
-
-//comments doh
-
-//#include "C:\\SystemProgramming\\Qt-5.3\\sql\\connection.h"
 std::string username = "";
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -34,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
                             "Once you enter the application you'll be able to add new account/password combos";
     invalidDialog(message);
 
-//
-//runs loginBuuton call which opens the login dialog
-//
+    //
+    //runs loginBuuton call which opens the login dialog
+    //
     on_loginButton_clicked();
 }
 
@@ -102,10 +96,17 @@ void MainWindow::on_loginButton_clicked()
         // If the user didn't dismiss the dialog, do something with the fields
         std::string user = userEdit->text().toStdString();
         std::string pss = passEdit->text().toStdString();
-
-        authenticate(user, pss);
-        this->show();
-        enableStatus(true);
+        if (userEdit->text() == "" || passEdit->text() == "")
+        {
+            invalidDialog("Please enter a valid username or password");
+            on_loginButton_clicked();
+        }
+        else
+        {
+            authenticate(user, pss);
+            this->show();
+            enableStatus(true);
+        }
     }
 }
 
@@ -177,9 +178,9 @@ void MainWindow::updateAccountList()
                                 "You can then select \"Add\" or \"Save\" to add the combo to your account\n\n"
                                 "Once you have a couple entries you can select said entries from the listWidget on the middle left\n"
                                 "Clicking on entries will populate the lineEdits and you may edit thier information";
-        //invalidDialog(message);
     }
     db.close();
+    ui->accountList->sortItems(Qt::AscendingOrder);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,19 +199,23 @@ void MainWindow::authenticate(std::string user, std::string pss)
                      "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
+    //look for a username in the users table
     QString queryString = "SELECT * FROM users WHERE username='" + QString::fromStdString(encryption::encrypt(user, 29, 41)) + "'";
     QSqlQuery query(db);
     query.prepare(queryString);
 
+    //if query executes with error display it otherwise move to else
     if( !query.exec() )
       qDebug() << query.lastError();
     else
     {
+        //retrieve the query record for processing
         qDebug( "Selected!" );
         query.first();
         QSqlRecord rec = query.record();
         qDebug() << rec.value(0).toString();
 
+        //if record is empty no username was found
         if (rec.value(0).toString() == "")
         {
             invalidDialog("Username not found");
@@ -219,12 +224,14 @@ void MainWindow::authenticate(std::string user, std::string pss)
         }//not in database
         else if(QString::fromStdString(encryption::decrypt(rec.value(1).toString().toStdString(), 29, 41)) != QString::fromStdString(pss))
         {
+            //passsword for the found username didn't match record
             invalidDialog("Password doesn't match any on record");
             db.close();
             on_loginButton_clicked();
-        }
+        }//username found, but password doesn't match
         else
         {
+            //all records match so login
             username = user;
             ui->nameLabel->setText(QString::fromStdString(user));
         }
@@ -295,6 +302,7 @@ void MainWindow::registerAccount()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::insertUser(std::string usr, std::string pss)
 {
+    //open database
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("users.db3");
     if (!db.open()) {
@@ -306,30 +314,33 @@ void MainWindow::insertUser(std::string usr, std::string pss)
                      "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
+    //query database and determine if a table exists
     QString queryString = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + QString::fromStdString(encryption::encrypt(usr, 29, 41)) + "'";
     QSqlQuery query(db);
     query.prepare(queryString);
 
+    //if query executes succeffuslly move to else
     if( !query.exec() )
       qDebug() << query.lastError();
     else
     {
-      qDebug( "Selected!" );
+        //retrieve the record from the query
+        qDebug( "Selected!" );
+        QSqlRecord rec = query.record();
+        int cols = rec.count();
 
-      QSqlRecord rec = query.record();
-
-      int cols = rec.count();
-
-      for( int r=0; query.next(); r++ )
-        for( int c=0; c<cols; c++ )
-          qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
+        //display entries in selected table for debugging
+        for( int r=0; query.next(); r++ )
+            for( int c=0; c<cols; c++ )
+                qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( query.value(c).toString() );
     }
 
-
+    //reset query record and determine if new table is necessary
     query.first();
     qDebug() << query.value(0).toString();
     if (query.value(0).toString() == "0" && usr != "users")
     {
+        //create new table for a user
         QSqlQuery query1(db);
         queryString = "create table '" + QString::fromStdString(encryption::encrypt(usr,29,41)) + "' (username varchar(20), password varchar(20))";
         qDebug() << queryString;
@@ -344,6 +355,7 @@ void MainWindow::insertUser(std::string usr, std::string pss)
     }
     else if (query.value(0).toString() == "1")
     {
+        //user already exists
         qDebug() << "Table exists";
         invalidDialog("Invalid Username please select another");
         registerAccount();
@@ -357,6 +369,10 @@ void MainWindow::insertUser(std::string usr, std::string pss)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::invalidDialog(std::string str)
 {
+    //
+    //  This fucntion is mainly used to output message dialogs with a given string
+    //
+
     QDialog dialog(this);
     // Use a layout allowing to have a label next to each field
     QFormLayout form(&dialog);
@@ -392,6 +408,7 @@ void MainWindow::on_addButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::addAccount()
 {
+    //open database
     QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
     db.setDatabaseName( "users.db3" );
     if( !db.open() )
@@ -400,8 +417,8 @@ void MainWindow::addAccount()
       qFatal( "Failed to connect." );
     }
 
+    //insert account into a users table
     QSqlQuery qry;
-
     QString queryString = "INSERT INTO '" + QString::fromStdString(encryption::encrypt(username, 29, 41)) + "' (username, password) VALUES ('" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "', '" + QString::fromStdString(encryption::encrypt(ui->passEdit->text().toStdString(),29,41)) + "')";
     qDebug() << queryString;
     qry.prepare(queryString);
@@ -420,10 +437,15 @@ void MainWindow::addAccount()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::deleteAccount()
 {
+    //delete an account from a users table
+
+    //check to make sure something is selected in the listwidget
     if (ui->accountList->currentRow() != -1)
     {
+        //get selected text
         QString itemString = ui->accountList->currentItem()->text();
 
+        //open database
         QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
         db.setDatabaseName( "users.db3" );
         if( !db.open() )
@@ -432,8 +454,8 @@ void MainWindow::deleteAccount()
           qFatal( "Failed to connect." );
         }
 
+        //delete entry from user table
         QSqlQuery qry;
-
         QString queryString = "DELETE FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(itemString.toStdString(),29,41)) + "'";
         qDebug() << queryString;
         qry.prepare(queryString);
@@ -466,12 +488,14 @@ void MainWindow::on_deleteButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_saveButton_clicked()
 {
+    //make sure linedits aren't enpty
     if (ui->accountEdit->text() == "" || ui->passEdit->text() == "")
     {
         invalidDialog("Please enter a valid username/password");
     }
     else
     {
+        //open database
         QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
         db.setDatabaseName( "users.db3" );
         if( !db.open() )
@@ -480,6 +504,7 @@ void MainWindow::on_saveButton_clicked()
           qFatal( "Failed to connect." );
         }
 
+        //look for acoount name in users table to check for duplicates
         QString queryString = "SELECT * FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "'";
         QSqlQuery query(db);
         query.prepare(queryString);
@@ -493,6 +518,7 @@ void MainWindow::on_saveButton_clicked()
             QSqlRecord rec = query.record();
             qDebug() << rec.value(0).toString();
 
+            //if nothing was found then add fresh account
             if (rec.value(0).toString() == "")
             {
                 db.close();
@@ -500,6 +526,7 @@ void MainWindow::on_saveButton_clicked()
             }//not in database
             else
             {
+                //if account was already found update entry
                 QString queryString = "UPDATE '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' SET password='" + QString::fromStdString(encryption::encrypt(ui->passEdit->text().toStdString(),29,41)) + "' " + "WHERE username='" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "'";
                 qDebug() << queryString;
                 query.prepare(queryString);
@@ -516,7 +543,12 @@ void MainWindow::on_saveButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_accountList_itemClicked(QListWidgetItem *item)
 {
+    //update linedits with information when they are clicked in the list widget
+
+    //first linedit is easy we already have the decrypted text
     ui->accountEdit->setText(item->text());
+    
+    //open database
     QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
     db.setDatabaseName( "users.db3" );
     if( !db.open() )
@@ -525,15 +557,16 @@ void MainWindow::on_accountList_itemClicked(QListWidgetItem *item)
       qFatal( "Failed to connect." );
     }
 
+    //look for username in the users table
     QSqlQuery qry;
-
     QString queryString = "SELECT * FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(item->text().toStdString(), 29, 41)) + "'";\
     qDebug() << queryString;
     qry.prepare(queryString);
+
     if( !qry.exec() )
       qDebug() << qry.lastError();
     else
-    {
+    {   
         qDebug( "entry Selected!" );
 
         QSqlRecord rec = qry.record();

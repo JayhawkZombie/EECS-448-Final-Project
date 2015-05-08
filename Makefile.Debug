@@ -414,9 +414,6 @@ debug\main.obj: main.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstyle.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
-		login.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialog \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QApplication \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qapplication.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qcoreapplication.h \
@@ -550,57 +547,6 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtabbar.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qrubberband.h \
 		ui_mainwindow.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\QVariant \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QAction \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qaction.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qactiongroup.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QApplication \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qapplication.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qcoreapplication.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qeventloop.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdesktopwidget.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qguiapplication.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qinputmethod.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QButtonGroup \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qbuttongroup.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QFormLayout \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qformlayout.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QLayout \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlayout.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlayoutitem.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qboxlayout.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qgridlayout.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QFrame \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QGridLayout \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QHBoxLayout \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QHeaderView \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qheaderview.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QLabel \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlabel.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QLineEdit \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlineedit.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtextcursor.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtextformat.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qpen.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtGui\qtextoption.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QListWidget \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QMenu \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qmenu.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QMenuBar \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qmenubar.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QPushButton \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qpushbutton.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qabstractbutton.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QSpacerItem \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QStatusBar \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qstatusbar.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QToolBar \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qtoolbar.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QVBoxLayout \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QWidget \
-		login.h \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialog \
-		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QtSql \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QtSqlDepends \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\QtCore \
@@ -645,8 +591,10 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qjsondocument.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qjsonobject.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstracteventdispatcher.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qeventloop.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qabstractnativeeventfilter.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qbasictimer.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qcoreapplication.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qmath.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qmetaobject.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\qmimedata.h \
@@ -725,10 +673,18 @@ debug\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qsqltablemodel.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\qtsqlversion.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtCore\QDebug \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QFormLayout \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qformlayout.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QLayout \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlayout.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qlayoutitem.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qboxlayout.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qgridlayout.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QDialogButtonBox \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialogbuttonbox.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\QMessageBox \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qmessagebox.h \
+		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtWidgets\qdialog.h \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QSqlDatabase \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QSqlError \
 		C:\SystemProgramming\Qt\5.4\msvc2013_64\include\QtSql\QSqlQuery \
