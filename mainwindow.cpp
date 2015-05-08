@@ -12,6 +12,9 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include "encryption.h"
+
+//comments doh
 
 //comments doh
 
@@ -141,7 +144,7 @@ void MainWindow::updateAccountList()
     }
 
     QSqlQuery qry;
-    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " ORDER BY username";\
+    QString queryString = "SELECT * FROM '" + QString::fromStdString(encryption::encrypt(username, 29, 41)) + "'";\
     qDebug() << queryString;
     qry.prepare(queryString);
     if( !qry.exec() )
@@ -159,7 +162,7 @@ void MainWindow::updateAccountList()
 
         for( int r=0; qry.next(); r++ )
         {
-            ui->accountList->addItem(qry.value(0).toString());
+            ui->accountList->addItem(QString::fromStdString(encryption::decrypt(qry.value(0).toString().toStdString(), 29, 41)));
             for( int c=0; c<cols; c++ )
             {
                 qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( qry.value(c).toString() );
@@ -174,7 +177,7 @@ void MainWindow::updateAccountList()
                                 "You can then select \"Add\" or \"Save\" to add the combo to your account\n\n"
                                 "Once you have a couple entries you can select said entries from the listWidget on the middle left\n"
                                 "Clicking on entries will populate the lineEdits and you may edit thier information";
-        invalidDialog(message);
+        //invalidDialog(message);
     }
     db.close();
 }
@@ -195,7 +198,7 @@ void MainWindow::authenticate(std::string user, std::string pss)
                      "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    QString queryString = "SELECT * FROM users WHERE username='" + QString::fromStdString(user) + "'";
+    QString queryString = "SELECT * FROM users WHERE username='" + QString::fromStdString(encryption::encrypt(user, 29, 41)) + "'";
     QSqlQuery query(db);
     query.prepare(queryString);
 
@@ -214,7 +217,7 @@ void MainWindow::authenticate(std::string user, std::string pss)
             db.close();
             on_loginButton_clicked();
         }//not in database
-        else if(rec.value(1).toString() != QString::fromStdString(pss))
+        else if(QString::fromStdString(encryption::decrypt(rec.value(1).toString().toStdString(), 29, 41)) != QString::fromStdString(pss))
         {
             invalidDialog("Password doesn't match any on record");
             db.close();
@@ -308,7 +311,7 @@ void MainWindow::insertUser(std::string usr, std::string pss)
                      "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    QString queryString = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + QString::fromStdString(usr) + "'";
+    QString queryString = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + QString::fromStdString(encryption::encrypt(usr, 29, 41)) + "'";
     QSqlQuery query(db);
     query.prepare(queryString);
 
@@ -329,15 +332,16 @@ void MainWindow::insertUser(std::string usr, std::string pss)
 
 
     query.first();
+    qDebug() << query.value(0).toString();
     if (query.value(0).toString() == "0" && usr != "users")
     {
         QSqlQuery query1(db);
-        queryString = "create table " + QString::fromStdString(usr) + "(username varchar(20), password varchar(20))";
+        queryString = "create table '" + QString::fromStdString(encryption::encrypt(usr,29,41)) + "' (username varchar(20), password varchar(20))";
         qDebug() << queryString;
         query1.prepare(queryString);
         query1.exec();
         //insert into users(username, password) values('amy', '1234')
-        queryString = "insert into users(username, password) values('" + QString::fromStdString(usr) + "', '" + QString::fromStdString(pss) + "')";
+        queryString = "insert into users(username, password) values('" + QString::fromStdString(encryption::encrypt(usr, 29, 41)) + "', '" + QString::fromStdString(encryption::encrypt(pss, 29, 41)) + "')";
         qDebug() << queryString;
         query1.prepare(queryString);
         query1.exec();
@@ -477,7 +481,7 @@ void MainWindow::addAccount()
 
     QSqlQuery qry;
 
-    QString queryString = "INSERT INTO " + QString::fromStdString(username) + "(username, password) VALUES ('" + ui->accountEdit->text() + "', '" + ui->passEdit->text() + "')";
+    QString queryString = "INSERT INTO '" + QString::fromStdString(encryption::encrypt(username, 29, 41)) + "' (username, password) VALUES ('" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "', '" + QString::fromStdString(encryption::encrypt(ui->passEdit->text().toStdString(),29,41)) + "')";
     qDebug() << queryString;
     qry.prepare(queryString);
     if( !qry.exec() )
@@ -509,7 +513,7 @@ void MainWindow::deleteAccount()
 
         QSqlQuery qry;
 
-        QString queryString = "DELETE FROM " + QString::fromStdString(username) + " WHERE username='" + itemString + "'";
+        QString queryString = "DELETE FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(itemString.toStdString(),29,41)) + "'";
         qDebug() << queryString;
         qry.prepare(queryString);
         if( !qry.exec() )
@@ -555,7 +559,7 @@ void MainWindow::on_saveButton_clicked()
           qFatal( "Failed to connect." );
         }
 
-        QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + ui->accountEdit->text() + "'";
+        QString queryString = "SELECT * FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "'";
         QSqlQuery query(db);
         query.prepare(queryString);
 
@@ -575,7 +579,7 @@ void MainWindow::on_saveButton_clicked()
             }//not in database
             else
             {
-                QString queryString = "UPDATE " + QString::fromStdString(username) + " SET password='" + ui->passEdit->text() + "' " + "WHERE username='" + ui->accountEdit->text() + "'";
+                QString queryString = "UPDATE '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' SET password='" + QString::fromStdString(encryption::encrypt(ui->passEdit->text().toStdString(),29,41)) + "' " + "WHERE username='" + QString::fromStdString(encryption::encrypt(ui->accountEdit->text().toStdString(),29,41)) + "'";
                 qDebug() << queryString;
                 query.prepare(queryString);
                 query.exec();
@@ -602,7 +606,7 @@ void MainWindow::on_accountList_itemClicked(QListWidgetItem *item)
 
     QSqlQuery qry;
 
-    QString queryString = "SELECT * FROM " + QString::fromStdString(username) + " WHERE username='" + item->text() + "'";\
+    QString queryString = "SELECT * FROM '" + QString::fromStdString(encryption::encrypt(username,29,41)) + "' WHERE username='" + QString::fromStdString(encryption::encrypt(item->text().toStdString(), 29, 41)) + "'";\
     qDebug() << queryString;
     qry.prepare(queryString);
     if( !qry.exec() )
@@ -620,7 +624,7 @@ void MainWindow::on_accountList_itemClicked(QListWidgetItem *item)
 
         for( int r=0; qry.next(); r++ )
         {
-            ui->passEdit->setText(qry.value(1).toString());
+            ui->passEdit->setText(QString::fromStdString(encryption::decrypt(qry.value(1).toString().toStdString(), 29, 41)));
             for( int c=0; c<cols; c++ )
             {
                 qDebug() << QString( "Row %1, %2: %3" ).arg( r ).arg( rec.fieldName(c) ).arg( qry.value(c).toString() );
