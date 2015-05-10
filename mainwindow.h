@@ -21,6 +21,8 @@ private slots:
 
     void on_loginButton_clicked();
 
+    void loginDialog();
+
     void exitFunction();
 
     void registerAccount();

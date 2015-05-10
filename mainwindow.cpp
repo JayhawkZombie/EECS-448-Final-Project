@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //
     //runs loginBuuton call which opens the login dialog
     //
-    on_loginButton_clicked();
+    loginDialog();
 }
 
 MainWindow::~MainWindow()
@@ -41,7 +41,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_logoutButton_clicked()
 {
-    on_loginButton_clicked();
+    //this->hide();
+    loginDialog();
+    //this->show();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,7 +51,13 @@ void MainWindow::on_logoutButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_loginButton_clicked()
 {
-    this->hide();
+    //this->hide();
+    loginDialog();
+    //;
+}
+
+void MainWindow::loginDialog()
+{
     QDialog dialog(this);
     // Use a layout allowing to have a label next to each field
     QFormLayout form(&dialog);
@@ -104,7 +112,6 @@ void MainWindow::on_loginButton_clicked()
         else
         {
             authenticate(user, pss);
-            this->show();
             enableStatus(true);
         }
     }
@@ -263,10 +270,12 @@ void MainWindow::registerAccount()
 
     //create password edit, set echo mode to password for password entry
     QLineEdit *passEdit = new QLineEdit(&dialog);
+    passEdit->setEchoMode(QLineEdit::Password);
     QString passString = QString("Password:");
     form.addRow(passString, passEdit);
 
     QLineEdit *conPassEdit = new QLineEdit(&dialog);
+    conPassEdit->setEchoMode(QLineEdit::Password);
     QString conPassString = QString("Confirm Password:");
     form.addRow(conPassString, conPassEdit);
 
@@ -293,6 +302,11 @@ void MainWindow::registerAccount()
             std::string usr = userEdit->text().toStdString();
             std::string pss = passEdit->text().toStdString();
             insertUser(usr, pss);
+        }
+        else
+        {
+            invalidDialog("Please make sure the username field isn't empty\n and ensure Passwords fields match");
+            registerAccount();
         }
     }
 }
