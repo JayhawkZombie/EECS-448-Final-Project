@@ -41,9 +41,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_logoutButton_clicked()
 {
-    //this->hide();
+    enableStatus(false);
+
+    ui->accountList->clear();
+    ui->nameLabel->setText("");
+    ui->accountEdit->setText("");
+    ui->passEdit->setText("");
+
     loginDialog();
-    //this->show();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,9 +56,14 @@ void MainWindow::on_logoutButton_clicked()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void MainWindow::on_loginButton_clicked()
 {
-    //this->hide();
+    enableStatus(false);
+
+    ui->accountList->clear();
+    ui->nameLabel->setText("");
+    ui->accountEdit->setText("");
+    ui->passEdit->setText("");
+
     loginDialog();
-    //;
 }
 
 void MainWindow::loginDialog()
